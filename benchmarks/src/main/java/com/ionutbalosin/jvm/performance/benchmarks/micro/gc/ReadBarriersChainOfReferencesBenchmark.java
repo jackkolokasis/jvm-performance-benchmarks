@@ -43,8 +43,10 @@ import org.openjdk.jmh.annotations.Warmup;
  * Deprecated: using micro-benchmarks to gauge the performance of the Garbage Collectors might result in misleading conclusions.
  */
 @Deprecated
-@BenchmarkMode(Mode.Throughput)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+// @BenchmarkMode(Mode.Throughput)
+@BenchmarkMode(Mode.AverageTime)
+//@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 @Fork(value = 2)
@@ -58,7 +60,7 @@ public class ReadBarriersChainOfReferencesBenchmark {
   //    -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC}
   // - JMH options: -prof gc
 
-  @Param({"1024"})
+  @Param({"102400"})
   private int chain;
 
   private ObjectChain baseRef;
@@ -72,7 +74,7 @@ public class ReadBarriersChainOfReferencesBenchmark {
     for (; i < chain; i++) {
 
       ObjectChain nextObj = new ObjectChain(i);
-      cursor.refObj = nextObj;
+      cursor.setNext(nextObj);
 
       cursor = nextObj;
     }
@@ -89,19 +91,31 @@ public class ReadBarriersChainOfReferencesBenchmark {
 
     ObjectChain cursor = baseRef;
     while (cursor != null) {
-      sum += cursor.aValue;
-      cursor = cursor.refObj;
+      sum += cursor.getValue();
+      cursor = cursor.getNext();
     }
 
     return sum;
   }
 
   public class ObjectChain {
-    ObjectChain refObj;
-    int aValue;
+    private ObjectChain refObj;
+    private final int aValue;
 
     public ObjectChain(int aValue) {
       this.aValue = aValue;
+    }
+
+    public int getValue() {
+      return this.aValue;
+    }
+
+    public ObjectChain getNext() {
+      return this.refObj;
+    }
+
+    public void setNext(ObjectChain next) {
+      this.refObj = next;
     }
   }
 }
