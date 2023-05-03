@@ -165,4 +165,4 @@ echo ""
 echo "+===========================+"
 echo "| [5/5] Run benchmark suite |"
 echo "+===========================+"
-run_benchmark_suite
+#run_benchmark_suite

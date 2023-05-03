@@ -29,7 +29,7 @@ configure_openjdk11_hotspot_vm() {
 }
 
 configure_openjdk17_hotspot_vm() {
-  export JAVA_HOME="<path_to_jdk>"
+  export JAVA_HOME="/spare/kolokasis/nativeJVM/jdk17u/build/linux-x86_64-server-release/jdk"
   export JVM_NAME="OpenJDK HotSpot VM"
   export JVM_IDENTIFIER="openjdk-hotspot-vm"
 }

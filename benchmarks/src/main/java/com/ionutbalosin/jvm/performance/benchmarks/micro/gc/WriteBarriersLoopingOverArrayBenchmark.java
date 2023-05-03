@@ -43,8 +43,8 @@ import org.openjdk.jmh.annotations.Warmup;
  * Deprecated: using micro-benchmarks to gauge the performance of the Garbage Collectors might result in misleading conclusions.
  */
 @Deprecated
-@BenchmarkMode(Mode.Throughput)
-@OutputTimeUnit(TimeUnit.SECONDS)
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 @Fork(value = 2)
@@ -58,7 +58,7 @@ public class WriteBarriersLoopingOverArrayBenchmark {
   //     -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC}
   // - JMH options: -prof gc
 
-  @Param({"262144"})
+  @Param({"26214400"})
   private int size;
 
   private Object[] array;
